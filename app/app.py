@@ -46,18 +46,31 @@ st.markdown("""
         border-right: 4px solid #4361ee;
     }
     
-    div[data-testid="stSidebar"] { background: #1a1a2e; }
-    div[data-testid="stSidebar"] * { color: #e0e0e0 !important; }
-    div[data-testid="stSidebar"] .stMultiSelect > div { background: #2a2a4e !important; }
+    /* Sidebar – light, readable */
+    section[data-testid="stSidebar"] {
+        background-color: #f8f9ff !important;
+        border-left: 2px solid #e0e4ff;
+    }
+    section[data-testid="stSidebar"] * {
+        color: #1a1a2e !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
+        background-color: #4361ee !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] span {
+        color: #ffffff !important;
+    }
 
-    /* Hide Streamlit Cloud "Manage App" toolbar */
-    [data-testid="stToolbar"],
-    #MainMenu,
-    footer,
-    .stDeployButton,
-    [data-testid="manage-app-button"],
-    iframe[title="streamlit_analytics"] { display: none !important; }
-    .viewerBadge_container__1QSob { display: none !important; }
+    /* Hide Streamlit Cloud "Manage App" + footer – all known selectors */
+    #MainMenu                         { visibility: hidden !important; display: none !important; }
+    footer                            { visibility: hidden !important; display: none !important; }
+    [data-testid="stToolbar"]         { visibility: hidden !important; display: none !important; }
+    [data-testid="stDecoration"]      { visibility: hidden !important; display: none !important; }
+    [data-testid="manage-app-button"] { visibility: hidden !important; display: none !important; }
+    .stDeployButton                   { visibility: hidden !important; display: none !important; }
+    .viewerBadge_container__1QSob     { visibility: hidden !important; display: none !important; }
+    [class*="StatusWidget"]           { visibility: hidden !important; display: none !important; }
+    [class*="toolbarActions"]         { visibility: hidden !important; display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
