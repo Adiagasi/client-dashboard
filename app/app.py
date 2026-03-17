@@ -113,13 +113,68 @@ COLOR_ACTIVE  = "#2ec4b6"
 # -----------------------
 # Sidebar Filters
 # -----------------------
+
+# Hebrew alphabet sort order
+HEB = 'אבגדהוזחטיכלמנסעפצקרשת'
+def heb_sort(s):
+    return [HEB.index(c) if c in HEB else 999 for c in s]
+
+all_cities   = sorted(df["עיר"].unique(),       key=heb_sort)
+all_services = sorted(df["סוג_שירות"].unique(), key=heb_sort)
+all_statuses = sorted(df["סטטוס"].unique(),     key=heb_sort)
+
 with st.sidebar:
     st.markdown("## 🔍 סינון נתונים")
     st.markdown("---")
-    city    = st.multiselect("🏙️ עיר",        sorted(df["עיר"].unique()),          default=list(df["עיר"].unique()))
-    service = st.multiselect("🛡️ סוג שירות",  sorted(df["סוג_שירות"].unique()),    default=list(df["סוג_שירות"].unique()))
-    status  = st.multiselect("📌 סטטוס",       df["סטטוס"].unique(),               default=list(df["סטטוס"].unique()))
+
+    # --- עיר ---
+    st.markdown("**🏙️ עיר**")
+    c1, c2 = st.columns(2)
+    if c1.button("✅ הכל", key="city_all"):
+        st.session_state["city"] = all_cities
+    if c2.button("🗑️ נקה", key="city_clear"):
+        st.session_state["city"] = []
+    city = st.multiselect(
+        label="עיר",
+        options=all_cities,
+        default=st.session_state.get("city", all_cities),
+        key="city",
+        label_visibility="collapsed",
+        placeholder="חפש עיר..."
+    )
+
     st.markdown("---")
+
+    # --- סוג שירות ---
+    st.markdown("**🛡️ סוג שירות**")
+    c3, c4 = st.columns(2)
+    if c3.button("✅ הכל", key="svc_all"):
+        st.session_state["service"] = all_services
+    if c4.button("🗑️ נקה", key="svc_clear"):
+        st.session_state["service"] = []
+    service = st.multiselect(
+        label="סוג שירות",
+        options=all_services,
+        default=st.session_state.get("service", all_services),
+        key="service",
+        label_visibility="collapsed",
+        placeholder="חפש שירות..."
+    )
+
+    st.markdown("---")
+
+    # --- סטטוס ---
+    st.markdown("**📌 סטטוס**")
+    status = st.multiselect(
+        label="סטטוס",
+        options=all_statuses,
+        default=all_statuses,
+        label_visibility="collapsed",
+        placeholder="בחר סטטוס..."
+    )
+
+    st.markdown("---")
+    st.caption(f"🏙️ {len(city)} ערים | 🛡️ {len(service)} שירותים")
     st.caption("📁 clients_data.csv")
 
 filtered_df = df[
@@ -378,16 +433,15 @@ def fix_client_ids(data):
     fixed["client_id"] = ["C" + str(1000 + i) for i in range(len(fixed))]
     return fixed
 
-if st.button("צור קובץ Excel מתוקן"):
+if st.button("📥 צור קובץ Excel מתוקן", use_container_width=False):
     fixed_df = fix_client_ids(df)
     fixed_df.to_excel("clients_data_fixed.xlsx", index=False)
-    
     with open("clients_data_fixed.xlsx", "rb") as file:
         st.download_button(
             label="⬇️ הורדת הקובץ המתוקן",
             data=file,
             file_name="clients_data_fixed.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
 
 st.markdown("<br><br>", unsafe_allow_html=True)
