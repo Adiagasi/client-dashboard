@@ -96,6 +96,8 @@ st.markdown("""
 @st.cache_data
 def load_data():
     df = pd.read_csv("clients_data.csv")
+    df1 = pd.read_csv("clients_data.csv")
+
     df["תאריך_הצטרפות"] = pd.to_datetime(df["תאריך_הצטרפות"], dayfirst=True, errors="coerce")
     df["תאריך_נטישה"]    = pd.to_datetime(df["תאריך_נטישה"],    dayfirst=True, errors="coerce")
     df["שנת_הצטרפות"]    = df["תאריך_הצטרפות"].dt.year
@@ -103,7 +105,7 @@ def load_data():
     return df
 
 df = load_data()
-df1 = load_data()
+
 
 # Plotly theme defaults
 CHART_THEME   = "plotly_white"
