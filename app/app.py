@@ -13,14 +13,43 @@ st.set_page_config(
 # RTL + Custom CSS
 st.markdown("""
 <style>
+    /* ── Global font ── */
     html, body, [class*="css"] {
-        direction: rtl;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    .main { background-color: #f0f2f6; }
-    .block-container { padding-top: 1.5rem; }
-    
-    /* KPI Cards */
+
+    /* ── Main content area: RTL ── */
+    .main .block-container {
+        direction: rtl !important;
+        padding-top: 1.2rem;
+        background-color: #f0f2f6;
+    }
+
+    /* ── Sidebar: always LTR so it stays on the LEFT and stays VISIBLE ── */
+    section[data-testid="stSidebar"] {
+        direction: ltr !important;
+        background-color: #f8f9ff !important;
+        border-right: 2px solid #dde3ff !important;
+        min-width: 260px !important;
+        padding-top: 0.5rem;
+    }
+    /* Flip text inside sidebar back to RTL so Hebrew reads correctly */
+    section[data-testid="stSidebar"] .block-container,
+    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span {
+        direction: rtl !important;
+        text-align: right !important;
+    }
+    section[data-testid="stSidebar"] * { color: #1a1a2e !important; }
+    section[data-testid="stSidebar"] [data-baseweb="tag"] {
+        background-color: #4361ee !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="tag"] span {
+        color: #ffffff !important;
+    }
+
+    /* ── KPI Cards ── */
     .kpi-card {
         background: white;
         border-radius: 14px;
@@ -29,14 +58,14 @@ st.markdown("""
         border-right: 5px solid;
         margin-bottom: 10px;
     }
-    .kpi-card.blue  { border-color: #4361ee; }
-    .kpi-card.green { border-color: #2ec4b6; }
-    .kpi-card.orange{ border-color: #ff9f1c; }
-    .kpi-card.red   { border-color: #e63946; }
+    .kpi-card.blue   { border-color: #4361ee; }
+    .kpi-card.green  { border-color: #2ec4b6; }
+    .kpi-card.orange { border-color: #ff9f1c; }
+    .kpi-card.red    { border-color: #e63946; }
     .kpi-value { font-size: 2rem; font-weight: 700; color: #1a1a2e; margin: 0; }
     .kpi-label { font-size: 0.85rem; color: #6c757d; margin: 0; }
     .kpi-icon  { font-size: 1.8rem; }
-    
+
     .section-title {
         font-size: 1.15rem;
         font-weight: 700;
@@ -45,32 +74,19 @@ st.markdown("""
         padding-right: 10px;
         border-right: 4px solid #4361ee;
     }
-    
-    /* Sidebar – light, readable */
-    section[data-testid="stSidebar"] {
-        background-color: #f8f9ff !important;
-        border-left: 2px solid #e0e4ff;
-    }
-    section[data-testid="stSidebar"] * {
-        color: #1a1a2e !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
-        background-color: #4361ee !important;
-    }
-    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] span {
-        color: #ffffff !important;
-    }
 
-    /* Hide Streamlit Cloud "Manage App" + footer – all known selectors */
-    #MainMenu                         { visibility: hidden !important; display: none !important; }
-    footer                            { visibility: hidden !important; display: none !important; }
-    [data-testid="stToolbar"]         { visibility: hidden !important; display: none !important; }
-    [data-testid="stDecoration"]      { visibility: hidden !important; display: none !important; }
-    [data-testid="manage-app-button"] { visibility: hidden !important; display: none !important; }
-    .stDeployButton                   { visibility: hidden !important; display: none !important; }
-    .viewerBadge_container__1QSob     { visibility: hidden !important; display: none !important; }
-    [class*="StatusWidget"]           { visibility: hidden !important; display: none !important; }
-    [class*="toolbarActions"]         { visibility: hidden !important; display: none !important; }
+    /* ── Hide Manage App / footer ── */
+    #MainMenu, footer,
+    [data-testid="stToolbar"],
+    [data-testid="stDecoration"],
+    [data-testid="manage-app-button"],
+    .stDeployButton,
+    .viewerBadge_container__1QSob,
+    [class*="StatusWidget"],
+    [class*="toolbarActions"] {
+        display:    none !important;
+        visibility: hidden !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
