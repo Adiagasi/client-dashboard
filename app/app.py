@@ -49,6 +49,15 @@ st.markdown("""
     div[data-testid="stSidebar"] { background: #1a1a2e; }
     div[data-testid="stSidebar"] * { color: #e0e0e0 !important; }
     div[data-testid="stSidebar"] .stMultiSelect > div { background: #2a2a4e !important; }
+
+    /* Hide Streamlit Cloud "Manage App" toolbar */
+    [data-testid="stToolbar"],
+    #MainMenu,
+    footer,
+    .stDeployButton,
+    [data-testid="manage-app-button"],
+    iframe[title="streamlit_analytics"] { display: none !important; }
+    .viewerBadge_container__1QSob { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -228,27 +237,31 @@ st.markdown('<p class="section-title">🔎 ניתוח מעמיק</p>', unsafe_al
 c5, c6 = st.columns(2)
 
 with c5:
-    fig_scatter = px.scatter(
-        filtered_df,
-        x="זמן_תגובה_ממוצע_שעות",
-        y="שביעות_רצון",
+    bins   = [0, 15, 30, 50, 70, 101]
+    labels = ["0-15", "15-30", "30-50", "50-70", "70+"]
+    box_df = filtered_df.copy()
+    box_df["טווח_תגובה"] = pd.cut(
+        box_df["זמן_תגובה_ממוצע_שעות"], bins=bins, labels=labels, right=False
+    )
+    fig_box = px.box(
+        box_df.dropna(subset=["טווח_תגובה"]),
+        x="טווח_תגובה", y="שביעות_רצון",
         color="סטטוס",
-        size="סכום_תיק",
-        size_max=20,
-        opacity=0.55,
-        hover_data=["שם", "עיר", "סוג_שירות"],
-        title="זמן תגובה מול שביעות רצון",
+        title="שביעות רצון לפי טווח זמן תגובה",
         template=CHART_THEME,
         color_discrete_map={"פעיל": COLOR_ACTIVE, "לא פעיל": COLOR_CHURN},
+        points=False, notched=True,
+        category_orders={"טווח_תגובה": labels},
     )
-    fig_scatter.update_layout(
+    fig_box.update_layout(
         title_font_size=15,
-        xaxis_title="זמן תגובה ממוצע (שעות)",
-        yaxis_title="שביעות רצון",
+        xaxis_title="זמן תגובה (שעות)",
+        yaxis_title="שביעות רצון (1-10)",
         legend_title_text="סטטוס",
         margin=dict(t=45, b=30, l=30, r=20),
     )
-    st.plotly_chart(fig_scatter, use_container_width=True)
+    st.plotly_chart(fig_box, use_container_width=True)
+
 
 with c6:
     city_service = (
