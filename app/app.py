@@ -378,15 +378,16 @@ def fix_client_ids(data):
     fixed["client_id"] = ["C" + str(1000 + i) for i in range(len(fixed))]
     return fixed
 
-if st.button("📥 צור קובץ Excel מתוקן", use_container_width=False):
+if st.button("צור קובץ Excel מתוקן"):
     fixed_df = fix_client_ids(df)
     fixed_df.to_excel("clients_data_fixed.xlsx", index=False)
+    
     with open("clients_data_fixed.xlsx", "rb") as file:
         st.download_button(
             label="⬇️ הורדת הקובץ המתוקן",
             data=file,
             file_name="clients_data_fixed.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
 st.markdown("<br><br>", unsafe_allow_html=True)
