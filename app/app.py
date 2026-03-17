@@ -105,7 +105,7 @@ def load_data():
     return df
 
 df = load_data()
-
+df1 = pd.read_csv("clients_data.csv")
 
 # Plotly theme defaults
 CHART_THEME   = "plotly_white"
